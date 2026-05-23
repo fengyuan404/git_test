@@ -1,25 +1,25 @@
-﻿# 🍉 Fruit Catalog
+﻿# 🍉 水果目录
 
-> A collaboratively curated fruit inventory — powered by Git, grown with love.
+> 一个基于 Git 协作维护的水果清单 —— 用版本控制管理每一颗果实。
 
 [![Git](https://img.shields.io/badge/git-%23F05033.svg?style=flat&logo=git&logoColor=white)](https://git-scm.com/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## 📖 Overview
+## 📖 项目简介
 
-**Fruit Catalog** is a lightweight, version-controlled collection of fruits. It serves as a hands-on demonstration of Git branching, merging, conflict resolution, and collaborative workflows — all wrapped in a deliciously simple dataset.
+**水果目录** 是一个轻量级、版本可控的水果集合。它既是 Git 分支管理、合并冲突解决、协作工作流的实战演示项目，也是一份简单有趣的数据集。
 
-Every fruit in the catalog represents a commit, every branch a seasonal harvest.
+每一次提交都是一颗水果，每一个分支都是一季丰收。
 
-## 🌳 Current Inventory
+## 🌳 当前库存
 
-| # | Fruit | # | Fruit | # | Fruit |
-|:-:|-------|:-:|-------|:-:|-------|
-| 1 | 🍌 香蕉 (Banana) | 4 | 🍎 苹果 (Apple) | 7 | 🍊 橘子 (Tangerine) |
-| 2 | 🍓 草莓 (Strawberry) | 5 | 🍉 西瓜 (Watermelon) | 8 | 🍇 葡萄 (Grape) |
-| 3 | 🥭 芒果 (Mango) | 6 | 🫐 杨梅 (Bayberry) | 9 | 🫐 蓝莓 (Blueberry) |
+| # | 水果 | # | 水果 | # | 水果 |
+|:-:|------|:-:|------|:-:|------|
+| 1 | 🍌 香蕉 | 4 | 🍎 苹果 | 7 | 🍊 橘子 |
+| 2 | 🍓 草莓 | 5 | 🍉 西瓜 | 8 | 🍇 葡萄 |
+| 3 | 🥭 芒果 | 6 | 🫐 杨梅 | 9 | 🫐 蓝莓 |
 
-## 🚀 Quick Start
+## 🚀 快速开始
 
 ```bash
 git clone https://github.com/fengyuan404/git_test.git
@@ -27,33 +27,33 @@ cd git_test
 cat fruits.txt
 ```
 
-## 📁 Project Structure
+## 📁 项目结构
 
 ```
 .
-├── fruits.txt    # The canonical fruit inventory
-└── README.md     # You are here
+├── fruits.txt    # 水果清单（唯一数据源）
+└── README.md     # 项目说明
 ```
 
-## 🌿 Branch Strategy
+## 🌿 分支策略
 
-| Branch | Purpose |
-|--------|---------|
-| `master` | Stable, production-ready fruit list |
-| `develop` | Integration branch for new fruits |
-| `feature/*` | Individual fruit proposals (e.g. `feature/strawberry`, `feature/mango`) |
+| 分支 | 用途 |
+|------|------|
+| `master` | 稳定版，生产级水果清单 |
+| `develop` | 开发集成分支，新水果在此汇合 |
+| `feature/*` | 单个水果的特性分支，如 `feature/strawberry`、`feature/mango` |
 
-## 🤝 Contributing
+## 🤝 参与贡献
 
-Want to add a fruit? Here''s how:
+想加一种水果？按以下步骤来：
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-fruit`
-3. Add your fruit to `fruits.txt` (alphabetical order preferred)
-4. Commit and open a Pull Request
+1. Fork 本仓库
+2. 创建特性分支：`git checkout -b feature/你的水果`
+3. 在 `fruits.txt` 中添加你的水果（建议按字母顺序）
+4. 提交并发起 Pull Request
 
-All contributions go through merge review — conflicts are resolved collaboratively.
+所有贡献均经过合并审查，冲突协作解决。
 
-## 📄 License
+## 📄 开源协议
 
 MIT © 2025
