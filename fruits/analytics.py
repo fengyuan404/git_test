@@ -1,7 +1,5 @@
-﻿"""📊 数据分析与可视化 — 水果营养数据图表生成。"""
+﻿"""📊 数据分析与可视化 — 零依赖 SVG 图表生成。"""
 
-import io
-import base64
 from . import data
 
 LABELS = {
@@ -13,42 +11,52 @@ LABELS = {
     "vitamin_c": "维生素C (mg/100g)",
 }
 
+COLORS = ["#FF6384","#36A2EB","#FFCE56","#4BC0C0","#9966FF","#FF9F40","#C9CBCF","#7BC8A4","#E8A87C"]
+
 
 def generate_chart(field):
-    """生成营养对比柱状图，返回 Base64 PNG"""
-    try:
-        import matplotlib
-        matplotlib.use("Agg")
-        import matplotlib.pyplot as plt
+    """生成营养对比柱状图 SVG（纯 Python，零依赖）"""
+    fruits = data.get_all()
+    names = list(fruits.keys())
+    values = [fruits[n][field] for n in names]
+    label = LABELS.get(field, field)
+    max_val = max(values)
 
-        fruits = data.get_all()
-        names = list(fruits.keys())
-        values = [fruits[n][field] for n in names]
+    bar_w = 50
+    gap = 20
+    chart_w = len(names) * (bar_w + gap) + 60
+    chart_h = 300
+    left_margin = 80
+    bottom_margin = 80
+    total_w = chart_w + left_margin
+    total_h = chart_h + bottom_margin
 
-        # 设置中文字体
-        plt.rcParams["font.sans-serif"] = ["Microsoft YaHei", "SimHei", "DejaVu Sans"]
-        plt.rcParams["axes.unicode_minus"] = False
+    bars_svg = ""
+    for i, (name, val) in enumerate(zip(names, values)):
+        x = left_margin + i * (bar_w + gap)
+        bar_h = (val / max_val) * chart_h
+        y = chart_h - bar_h + 10
+        color = COLORS[i % len(COLORS)]
+        label_x = left_margin + i * (bar_w + gap) + bar_w / 2
 
-        fig, ax = plt.subplots(figsize=(10, 5))
-        colors = plt.cm.Set3(range(len(names)))
-        bars = ax.bar(names, values, color=colors, edgecolor="white", linewidth=0.5)
+        bars_svg += f'''
+        <rect x="{x}" y="{y}" width="{bar_w}" height="{bar_h:.1f}" rx="4"
+              fill="{color}" opacity="0.85">
+          <title>{name}: {val}</title>
+        </rect>
+        <text x="{label_x}" y="{total_h - 45}" text-anchor="middle"
+              fill="#ccc" font-size="12">{name}</text>
+        <text x="{x + bar_w/2}" y="{y - 5}" text-anchor="middle"
+              fill="#fff" font-size="11" font-weight="bold">{val}</text>'''
 
-        for bar, val in zip(bars, values):
-            ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + max(values) * 0.01,
-                    str(val), ha="center", va="bottom", fontsize=9, fontweight="bold")
-
-        ax.set_title(f"🍉 水果 {LABELS.get(field, field)} 对比", fontsize=14, fontweight="bold")
-        ax.set_ylabel(LABELS.get(field, field))
-        ax.set_ylim(0, max(values) * 1.15)
-
-        buf = io.BytesIO()
-        plt.tight_layout()
-        plt.savefig(buf, format="png", dpi=100)
-        plt.close()
-        buf.seek(0)
-        return base64.b64encode(buf.read()).decode("utf-8")
-    except ImportError:
-        return None
+    svg = f'''<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {total_w} {total_h}"
+     width="100%" height="100%" style="background:#1a1a2e;border-radius:12px">
+  <text x="20" y="30" fill="#ffd200" font-size="18" font-weight="bold">🍉 {label} 对比</text>
+  {bars_svg}
+  <line x1="{left_margin}" y1="{total_h - 30}" x2="{left_margin+chart_w}" y2="{total_h - 30}"
+        stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+</svg>'''
+    return svg
 
 
 def summary():

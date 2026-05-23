@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, Response
 from . import data
 from . import analytics
 from . import dashboard
@@ -40,7 +40,7 @@ def api_root():
             "季节筛选": "/fruits/season/夏季",
             "Top排行": "/fruits/top/kcal?n=3",
             "统计概览": "/fruits/stats",
-            "生成图表": "/chart/{field}",
+            "SVG图表": "/chart/kcal",
         }
     }
 
@@ -90,9 +90,9 @@ def get_one(name: str):
 
 @app.get("/chart/{field}")
 def chart(field: str):
-    """返回 Base64 编码的营养数据对比柱状图"""
+    """返回 SVG 营养对比柱状图，可直接在浏览器中查看"""
     valid_fields = ["kcal", "carbs", "protein", "fat", "fiber", "vitamin_c"]
     if field not in valid_fields:
         raise HTTPException(status_code=400, detail=f"无效字段，可选: {valid_fields}")
-    img_base64 = analytics.generate_chart(field)
-    return {"field": field, "chart": img_base64}
+    svg = analytics.generate_chart(field)
+    return Response(content=svg, media_type="image/svg+xml")

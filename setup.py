@@ -17,13 +17,7 @@ setup(
     install_requires=[
         "fastapi>=0.100.0",
         "uvicorn>=0.23.0",
-        "matplotlib>=3.7.0",
     ],
-    extras_require={
-        "web": ["fastapi", "uvicorn"],
-        "viz": ["matplotlib"],
-        "all": ["fastapi", "uvicorn", "matplotlib"],
-    },
     entry_points={
         "console_scripts": [
             "fruits=fruits.cli:main",
