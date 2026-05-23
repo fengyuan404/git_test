@@ -2,8 +2,10 @@
 
 from fastapi import FastAPI, Query, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from . import data
 from . import analytics
+from . import dashboard
 
 app = FastAPI(
     title="🍉 Fruit Catalog API",
@@ -19,12 +21,18 @@ app.add_middleware(
 )
 
 
-@app.get("/")
+@app.get("/", response_class=HTMLResponse)
 def root():
+    return dashboard.DASHBOARD_HTML
+
+
+@app.get("/api")
+def api_root():
     return {
         "service": "Fruit Catalog API",
         "version": "2.0.0",
         "docs": "/docs",
+        "dashboard": "/",
         "endpoints": {
             "所有水果": "/fruits",
             "单个水果": "/fruits/{name}",
@@ -43,18 +51,15 @@ def get_all():
     return {"count": len(items), "fruits": items}
 
 
-@app.get("/fruits/{name}")
-def get_one(name: str):
-    fruit = data.get(name)
-    if not fruit:
-        raise HTTPException(status_code=404, detail=f"未找到水果「{name}」")
-    return {"name": name, "nutrition": fruit}
-
-
 @app.get("/fruits/search")
 def search_fruits(q: str = Query(..., description="搜索关键词")):
     result = data.search(q)
     return {"query": q, "count": len(result), "results": result}
+
+
+@app.get("/fruits/stats")
+def get_stats():
+    return data.stats()
 
 
 @app.get("/fruits/season/{season}")
@@ -75,9 +80,12 @@ def top_n(
     return {"field": field, "count": len(result), "ranking": result}
 
 
-@app.get("/fruits/stats")
-def get_stats():
-    return data.stats()
+@app.get("/fruits/{name}")
+def get_one(name: str):
+    fruit = data.get(name)
+    if not fruit:
+        raise HTTPException(status_code=404, detail=f"未找到水果「{name}」")
+    return {"name": name, "nutrition": fruit}
 
 
 @app.get("/chart/{field}")
